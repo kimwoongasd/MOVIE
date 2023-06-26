@@ -1,3 +1,17 @@
 from django.db import models
 
-# Create your models here.
+class Movie(models.Model):
+    name = models.CharField(max_length=30)
+    opening_date = models.DateField()
+    running_time = models.IntegerField()
+    overview = models.TextField()
+    actors = models.ManyToManyField('Actor', related_name='movies')
+
+   
+class Actor(models.Model):
+    name = models.CharField(max_length=10)
+    gender = models.CharField(max_length=1)
+    birth_date = models.DateField()
+    
+    def __str__(self):
+    	return self.name
