@@ -4,28 +4,28 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-
+from rest_framework.pagination import PageNumberPagination
 from .models import *
 from .serializers import *
 
 # Create your views here.
-class MovieList(APIView):
-    def get(self, request):
-        movies = Movie.objects.all()
-        serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
-        
-    def post(self, request):
-        serializer = MovieSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class MoviePageNumberPagination(PageNumberPagination):
+    page_size = 5
+    
+    
+class MovieList(ListCreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    pagination_class = MoviePageNumberPagination
 
+class ActorPageNumberPagination(PageNumberPagination):
+    page_size = 5
+    
 
 class ActorList(ListCreateAPIView):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    pagination_class = ActorPageNumberPagination
     
     
 class MovieDetail(RetrieveUpdateDestroyAPIView):
